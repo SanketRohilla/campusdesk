@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div>
+            <span class="text-muted me-2">#{{ ticket.id }}</span>
+            <strong class="fs-5">{{ ticket.title }}</strong>
+        </div>
+        <div>
+            <span class="badge bg-secondary me-1">{{ ticket.status }}</span>
+            <span class="badge bg-info text-dark">{{ ticket.priority }}</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="mb-2 text-muted small">
+            Submitted by <strong>{{ ticket.owner_username }}</strong> on {{ ticket.created_at }}
+            | Category: <strong>{{ ticket.category }}</strong>
+        </div>
+        <div class="p-3 bg-light rounded border mb-3">
+            {{ ticket.description | safe }}
+        </div>
+        {% if ticket.parsed_tags %}
+            <div class="mb-2 small">
+                <strong>Parsed Metadata:</strong> <code>{{ ticket.parsed_tags }}</code>
+            </div>
+        {% endif %}
+        {% if ticket.attachment_name %}
+            <div class="mt-2">
+                <a href="{{ url_for('ticket_detail_get', ticket_id=ticket.id, download=ticket.attachment_name) }}" class="btn btn-sm btn-outline-secondary">
+                    Download Attachment ({{ ticket.attachment_name }})
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h6 class="mb-0">Discussion & Updates ({{ comments | length }})</h6>
+    </div>
+    <ul class="list-group list-group-flush">
+        {% for c in comments %}
+        <li class="list-group-item">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+                <span><strong>{{ c.author_username }}</strong> ({{ c.author_role }})</span>
+                <span>{{ c.created_at }}</span>
+            </div>
+            <div>{{ c.body | safe }}</div>
+        </li>
+        {% else %}
+        <li class="list-group-item text-muted small">No comments yet.</li>
+        {% endfor %}
+    </ul>
+    <div class="card-body bg-light">
+        <form method="POST" action="{{ url_for('ticket_comment_post', ticket_id=ticket.id) }}">
+            <div class="mb-2">
+                <label class="form-label small fw-semibold">Add Reply</label>
+                <textarea name="body" rows="3" class="form-control" placeholder="Write a response..."></textarea>
+            </div>
+            <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <label class="col-form-label small">Update Status:</label>
+                </div>
+                <div class="col-auto">
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">-- Keep Current ({{ ticket.status }}) --</option>
+                        <option value="open">Open</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="resolved">Resolved</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <div class="col-auto ms-auto">
+                    <button type="submit" class="btn btn-sm btn-primary">Post Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

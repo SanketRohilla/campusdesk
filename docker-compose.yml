@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    container_name: campusdesk_web
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_PATH=/app/data/campusdesk.db
+      - UPLOAD_FOLDER=/app/uploads
+    restart: unless-stopped

@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0">Submit New Support Ticket</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('ticket_new_post') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Ticket Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Brief summary of the issue" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Category</label>
+                            <select name="category" class="form-select">
+                                <option value="Network">Network & WiFi</option>
+                                <option value="Equipment">Hardware / Equipment Loan</option>
+                                <option value="Software">Software & Lab VMs</option>
+                                <option value="Announcement">Community Notice</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Priority</label>
+                            <select name="priority" class="form-select">
+                                <option value="low">Low</option>
+                                <option value="normal" selected>Normal</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description (HTML formatting supported)</label>
+                        <textarea name="description" rows="4" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Diagnostic Metadata Tags (Optional)</label>
+                        <input type="text" name="tags" class="form-control" placeholder="e.g. room=B204;os=linux;flags=[wifi,cert]">
+                        <div class="form-text">Supports key=value, [a,b] lists, start..end ranges, and token*count multipliers.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Attach Diagnostic Log or Screenshot</label>
+                        <input type="file" name="attachment" class="form-control">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="is_public" id="is_public" checked>
+                        <label class="form-check-label" for="is_public">
+                            Share ticket with other students on the community board
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
